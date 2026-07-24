@@ -16,11 +16,18 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt }),
       });
+      
       const data = await res.json();
-      if (data.url) setImageUrl(data.url);
-      else alert('Erreur de génération');
+      console.log('Réponse reçue du serveur :', data); // Utile pour débugger dans F12
+
+      if (data.url) {
+        setImageUrl(data.url);
+      } else {
+        alert('Erreur : ' + (data.message || 'L\'image n\'a pas pu être générée.'));
+      }
     } catch (err) {
-      alert('Une erreur est survenue');
+      console.error(err);
+      alert('Une erreur est survenue lors de la connexion.');
     }
     setLoading(false);
   };
@@ -48,7 +55,13 @@ export default function Home() {
           padding: '15px', background: '#fff', textAlign: 'center', boxShadow: '0 10px 20px rgba(0,0,0,0.1)'
         }}>
           {imageUrl ? (
-            <img src={imageUrl} alt="Œuvre IA" style={{ width: '100%', height: 'auto' }} />
+            <img 
+              src={imageUrl} 
+              alt="Œuvre IA" 
+              referrerPolicy="no-referrer"
+              style={{ width: '100%', height: 'auto', display: 'block' }} 
+              onError={() => alert("L'image n'a pas pu être chargée par votre navigateur. Pensez à désactiver votre bloqueur de pub s'il y en a un.")}
+            />
           ) : (
             <div style={{ height: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#eee' }}>
               Aperçu de votre création ici
