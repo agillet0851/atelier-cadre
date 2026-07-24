@@ -30,11 +30,11 @@ export default async function handler(req, res) {
 
     // Appel à l'API OpenAI au format vertical portrait (1024x1792)
     const response = await openai.images.generate({
-      model: "gpt-image-1",
-      prompt: prompt.trim(),
-      n: 1,
-      size: "1024x1792",
-    });
+  model: "gpt-image-1", // Ou "gpt-image-1-mini" / "gpt-image-2"
+  prompt: prompt,
+  n: 1,
+  size: "1024x1024",
+});
 
     const item = response.data?.[0];
     let imageUrl = item?.url;
