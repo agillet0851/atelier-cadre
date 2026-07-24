@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 
     // 3. Appel à OpenAI
     const response = await openai.images.generate({
-      model: "dall-e-3",
+      model: "gpt-image-1",
       prompt: prompt,
       n: 1,
       size: "1024x1024",
