@@ -23,11 +23,11 @@ export default async function handler(req, res) {
 
     // 3. Appel à OpenAI
     const response = await openai.images.generate({
-      model: "gpt-image-1",
-      prompt: prompt,
-      n: 1,
-      size: "1024x1024",
-    });
+  model: "gpt-image-1", // Ou "gpt-image-1-mini" / "gpt-image-2"
+  prompt: prompt,
+  n: 1,
+  size: "1024x1024",
+});
 
     const imageUrl = response.data[0].url;
     console.log("--> Image générée avec succès !");
