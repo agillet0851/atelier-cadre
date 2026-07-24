@@ -9,12 +9,13 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Méthode non autorisée" });
   }
 
- const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
-const prompt = body?.prompt;
+  // S'assure que le corps de la requête est bien un objet JSON
+  const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+  const prompt = body?.prompt;
 
-if (!prompt) {
-  return res.status(400).json({ message: "Le prompt est requis." });
-}
+  if (!prompt) {
+    return res.status(400).json({ message: "Le prompt est requis." });
+  }
 
   try {
     const response = await openai.images.generate({
