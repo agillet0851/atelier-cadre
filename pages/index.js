@@ -75,6 +75,14 @@ export default function Home() {
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       padding: '40px 20px'
     }}>
+      {/* INJECTION DES ANIMATIONS CSS */}
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .spinner { animation: spin 1s linear infinite; }
+        .pulse { animation: pulse 1.5s ease-in-out infinite; }
+      `}} />
+
       {/* EN-TÊTE SITE */}
       <header style={{ textAlign: 'center', marginBottom: '40px' }}>
         <h1 style={{ fontSize: '2.2rem', fontWeight: '700', letterSpacing: '-0.5px', marginBottom: '8px' }}>
@@ -118,7 +126,20 @@ export default function Home() {
               justifyContent: 'center',
               boxShadow: 'inset 0 0 8px rgba(0,0,0,0.1)'
             }}>
-              {imageUrl ? (
+              
+              {loading ? (
+                // AFFICHAGE PENDANT LE CHARGEMENT (DANS LE CADRE)
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px', color: '#0f172a' }}>
+                  <svg className="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style={{ width: '40px', height: '40px' }}>
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" style={{ opacity: 0.2 }}></circle>
+                    <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" style={{ opacity: 0.8 }}></path>
+                  </svg>
+                  <span className="pulse" style={{ fontSize: '0.9rem', fontWeight: '500', color: '#64748b' }}>
+                    Peinture de votre œuvre...
+                  </span>
+                </div>
+              ) : imageUrl ? (
+                // AFFICHAGE DE L'IMAGE GÉNÉRÉE
                 <img
                   src={imageUrl}
                   alt="Œuvre IA"
@@ -126,11 +147,13 @@ export default function Home() {
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               ) : (
+                // AFFICHAGE PAR DÉFAUT
                 <div style={{ textAlign: 'center', padding: '20px', color: '#888', fontSize: '0.9rem' }}>
                   <div style={{ fontSize: '2rem', marginBottom: '10px' }}>🎨</div>
                   Aperçu de votre création
                 </div>
               )}
+
             </div>
           </div>
         </div>
@@ -154,7 +177,7 @@ export default function Home() {
               rows="3"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Ex: Une promenade d'automne dans la ville de Reims, style peinture Ghibli..."
+              placeholder="Ex: Une promenade d'automne dans la ville de Reims, style peinture vintage..."
               style={{
                 width: '100%',
                 padding: '12px',
@@ -166,6 +189,7 @@ export default function Home() {
                 boxSizing: 'border-box'
               }}
             />
+            
             <button
               onClick={genererImage}
               disabled={loading}
@@ -173,16 +197,31 @@ export default function Home() {
                 marginTop: '10px',
                 width: '100%',
                 padding: '12px',
-                backgroundColor: loading ? '#94a3b8' : '#0f172a',
+                backgroundColor: loading ? '#64748b' : '#0f172a',
                 color: '#ffffff',
                 border: 'none',
                 borderRadius: '8px',
                 fontSize: '0.9rem',
                 fontWeight: '600',
-                cursor: loading ? 'not-allowed' : 'pointer'
+                cursor: loading ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'background-color 0.2s'
               }}
             >
-              {loading ? 'Génération en cours...' : '✨ Générer l\'aperçu'}
+              {loading ? (
+                <>
+                  <svg className="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style={{ width: '18px', height: '18px' }}>
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" style={{ opacity: 0.25 }}></circle>
+                    <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Génération en cours...
+                </>
+              ) : (
+                '✨ Générer l\'aperçu'
+              )}
             </button>
 
             {errorMessage && (
